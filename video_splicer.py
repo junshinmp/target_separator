@@ -11,7 +11,7 @@ print("Target Separator: Using an aim training application, will" \
 
 data_dir = Path("training_data")
 spliced_videos = "raw_dataset"
-frame_splice = 30
+FRAME_SPLICE = 30
 
 # tracking variables for statistical info
 total_result_frames = 0
@@ -46,7 +46,7 @@ for file_path in data_dir.iterdir():
             break
 
         # collect splices at every 30th frame
-        if frame_count % frame_splice == 0:
+        if frame_count % FRAME_SPLICE == 0:
             img_name = f"{file_path.stem}_frame_{saved_count:04d}.jpg"
             out_path = os.path.join(video_output_path, img_name)
 
