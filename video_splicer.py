@@ -1,39 +1,78 @@
 import cv2
 import os
+import time
+
+from pathlib import Path
 
 print("Target Separator: Using an aim training application, will" \
         " determine the target and crosshair being used in order to" \
         " correctly track movements from the mouse corresponding to target" \
-        " for different scenarios.\n")
+        " for different scenarios.")
 
-video_path = input(("Enter relevant video path:"))
+data_dir = Path("training_data")
 spliced_videos = "raw_dataset"
 
-print(f"Spliced videos will put into the {spliced_videos} directory")
+# tracking variables for statistical info
+total_result_frames = 0
+total_time = 0
+times_per_split = {}
+
+print(f"Spliced videos will be put into the {spliced_videos} directory")
+print("---------------------------------------\n")
 os.makedirs(spliced_videos, exist_ok=True)
-cap = cv2.VideoCapture(video_path)
+for file_path in data_dir.iterdir():
+    start_time = time.perf_counter()
+    if not file_path.is_file() or file_path.suffix.lower() not in [".mp4", ".avi", ".mkv", ".mov"]:
+        continue
 
-frame_count = 0
-saved_count = 0
+    video_dir_name = f"{file_path.stem}_dir"
+    video_output_path = os.path.join(spliced_videos, video_dir_name)
+    os.makedirs(video_output_path, exist_ok=True)
 
-print("Now splicing specified video:")
-while cap.isOpened():
-    successful_read, frame = cap.read()
+    cap = cv2.VideoCapture(str(file_path))
 
-    # check if frame was correctly collected
-    if not successful_read:
-        print("Video has ended, or frame read unsuccessful")    
-        break
+    frame_count = 0
+    saved_count = 0
+    out_path = ""
 
-    # collect splices at every 30th frame
-    if frame_count % 30 == 0:
-        img_name = f"{video_path}_frame_{saved_count:04d}.jpg"
-        out_path = os.path.join(spliced_videos, img_name)
+    print(f"Now splicing specified video: {file_path.stem}")
+    while cap.isOpened():
+        successful_read, frame = cap.read()
 
-        cv2.imwrite(out_path, frame)
-        saved_count += 1
-    
-    frame_count += 1
+        # check if frame was correctly collected
+        if not successful_read:
+            print("Video has ended, or frame read unsuccessful")    
+            break
 
-cap.release()
-print(f"Video splicing complete. Saved {saved_count} frames to {out_path}")    
+        # collect splices at every 30th frame
+        if frame_count % 30 == 0:
+            img_name = f"{file_path.stem}_frame_{saved_count:04d}.jpg"
+            out_path = os.path.join(video_output_path, img_name)
+
+            cv2.imwrite(out_path, frame)
+            saved_count += 1
+        
+        frame_count += 1
+        total_result_frames += 1
+
+    cap.release()
+
+    # stats calc
+    end_time = time.perf_counter()
+    elapsed_time = end_time - start_time
+    times_per_split[file_path.stem] = elapsed_time
+    total_time += elapsed_time
+
+
+    print(f"Video splicing for {file_path.stem} complete. Saved {saved_count} frames to {out_path}\n")
+    print("---------------------------------------\n")
+
+print("Completed splicing all videos in training data directory.")
+print("Statistics:")
+print(f"Total Spliced Frames: {frame_count}")
+print(f"Total Elapsed Time: {total_time:.2f}")
+
+for key, val in times_per_split.items():
+    print(f" - {key}: {val:.2f} seconds")
+
+print("\n---------------------------------------\n")
