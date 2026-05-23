@@ -10,18 +10,27 @@ print("Target Separator: Using an aim training application, will" \
         " for different scenarios.")
 
 data_dir = Path("training_data")
-spliced_videos = "raw_dataset"
-FRAME_SPLICE = 30
+spliced_videos = Path("raw_dataset")
+FRAME_SPLICE = 60
 
 # tracking variables for statistical info
 total_result_frames = 0
 total_time = 0
 times_per_split = {}
+frame_count = 0
+saved_count = 0
+out_path = ""
 
 print(f"Spliced videos will be put into the {spliced_videos} directory")
-print("---------------------------------------\n")
 os.makedirs(spliced_videos, exist_ok=True)
+
+existing_images = []
+for video_dir in spliced_videos.iterdir():
+    if video_dir.is_dir():
+        existing_images.append(video_dir.name)
+
 for file_path in data_dir.iterdir():
+    print("\n---------------------------------------\n")
     start_time = time.perf_counter()
     if not file_path.is_file() or file_path.suffix.lower() not in [".mp4", ".avi", ".mkv", ".mov"]:
         continue
@@ -29,6 +38,10 @@ for file_path in data_dir.iterdir():
     video_dir_name = f"{file_path.stem}_dir"
     video_output_path = os.path.join(spliced_videos, video_dir_name)
     os.makedirs(video_output_path, exist_ok=True)
+
+    if video_dir_name in existing_images:
+        print(f"{video_dir_name} already exists in {spliced_videos}, skipping.")
+        continue
 
     cap = cv2.VideoCapture(str(file_path))
 
@@ -66,8 +79,8 @@ for file_path in data_dir.iterdir():
 
 
     print(f"Video splicing for {file_path.stem} complete. Saved {saved_count} frames to {out_path}\n")
-    print("---------------------------------------\n")
 
+print("\n---------------------------------------\n")
 print("Completed splicing all videos in training data directory.")
 print("Statistics:")
 print(f"Total Spliced Frames: {frame_count}")
