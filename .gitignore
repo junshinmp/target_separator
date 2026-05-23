@@ -1,3 +1,4 @@
 myenv/
 raw_dataset/
+training_data/
 .env
