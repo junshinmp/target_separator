@@ -57,4 +57,5 @@ for video_dir in spliced_root.iterdir():
             print(f"        Error: Image {image} could not be uploaded to API")
     curr_count += 1
 
+print("\n---------------------------------------\n")
 print(f"Finished uploading all images to cloud.")
