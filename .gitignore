@@ -1,4 +1,4 @@
 myenv/
-raw_dataset/
-training_data/
 .env
+test_results/
+raw_dataset/
