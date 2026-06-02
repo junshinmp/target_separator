@@ -1,0 +1,13 @@
+names:
+- Crosshair
+- Target
+nc: 2
+roboflow:
+  license: CC BY 4.0
+  project: target-separator
+  url: https://universe.roboflow.com/bears-workspace-uqmo7/target-separator/dataset/1
+  version: 1
+  workspace: bears-workspace-uqmo7
+test: ../test/images
+train: ../train/images
+val: ../valid/images

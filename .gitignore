@@ -2,3 +2,5 @@ myenv/
 .env
 test_results/
 raw_dataset/
+runs/
+training_data/
