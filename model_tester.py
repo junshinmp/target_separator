@@ -31,14 +31,16 @@ dataset = version.download("yolov8")
 test_images = glob.glob(f"{dataset.location}/test/images/*.jpg")
 print(f"Downloaded split. Found {len(test_images)} test images to evaluate.")
 
-yolo = YOLO("yolov8n.pt")
+yolo = YOLO("yolov8n-p2.yaml").load("yolov8n.pt")
 results = yolo.train(
     data=f"{dataset.location}/{DATASET_CONFIG}",
-    epochs=100,
+    epochs=5,
     imgsz=640, 
-    device=device,
-    batch=-1,
-    workers=4
+    box=12.0,            
+    cls=2.5,              
+    label_smoothing=0.05,
+    batch=4,
+    amp=True
 )
 
 best_model_path = "runs/detect/train/weights/best.pt"
