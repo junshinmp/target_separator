@@ -5,3 +5,4 @@ raw_dataset/
 runs/
 training_data/
 Target-Separator-1/
+*.cache
