@@ -16,6 +16,6 @@ else:
     # Check if the hardware drivers are missing or if it's a version mismatch
     try:
         import torch.utils.cpp_extension
-        print(f"PyTorch built with CUDA version: {torch.version.cuda}")
+        print(f"PyTorch built with CUDA version: {torch.version.cuda}") # type: ignore
     except Exception as e:
         print(f"Could not read backend: {e}")

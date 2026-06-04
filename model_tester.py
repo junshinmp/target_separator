@@ -53,7 +53,7 @@ if __name__ == '__main__':
         exist_ok=True
     )
     
-    freshest_run_dir = Path(yolo.trainer.save_dir)
+    freshest_run_dir = Path(yolo.trainer.save_dir) # type: ignore
     
     best_path = freshest_run_dir / "weights" / "best.pt"
     last_path = freshest_run_dir / "weights" / "last.pt"
