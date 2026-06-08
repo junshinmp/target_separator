@@ -43,7 +43,7 @@ if __name__ == '__main__':
     results = yolo.train(
         data=f"{dataset.location}/{DATASET_CONFIG}",
         device=device,
-        epochs=1,
+        epochs=50,
         imgsz=640, 
         box=12.0,            
         cls=2.5,
