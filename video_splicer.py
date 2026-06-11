@@ -9,6 +9,7 @@ print("Target Separator: Using an aim training application, will" \
         " correctly track movements from the mouse corresponding to target" \
         " for different scenarios.")
 
+# in case of this project, either "better_training" or "training_data"
 data_dir = Path("training_data")
 spliced_videos = Path("raw_dataset")
 FRAME_SPLICE = 60
