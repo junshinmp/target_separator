@@ -2,16 +2,20 @@ import yt_dlp
 import os
 from pathlib import Path
 
-better_training = Path("better_training")
+def download_video(url, output_folder="better_training"):
+    output_folder = Path(output_folder)
 
-print(f"Youtube videos will be put into the {better_training} directory")
-os.makedirs(better_training, exist_ok=True)
-
-url = 'https://www.youtube.com/watch?v=mjxGYCzzcSM'
-ydl_opts = {
-    'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]',
-    'outtmpl': str(better_training / '%(title)s.%(ext)s'),
+    print(f"Youtube videos will be put into the {output_folder} directory")
+    os.makedirs(output_folder, exist_ok=True)
+    
+    ydl_opts = {
+        'format': 'bestvideo[vcodec^=avc1]+bestaudio[ext=m4a]/best[vcodec^=avc1]',
+        'outtmpl': str(output_folder / '%(title)s.%(ext)s'),
     }
 
-with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-    ydl.download([url])
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
+
+if __name__ == '__main__':
+    url = 'https://www.youtube.com/watch?v=d-RGJPvFuNE'
+    download_video(url)
