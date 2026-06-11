@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 # uses dotenv to hide api key
 load_dotenv()
 API_KEY = os.getenv("ROBOFLOW_API_KEY")
+
+# can change to alter which project image goes into
+# ideally change in .env file temporarily
 PROJECT_ID = os.getenv("ROBOFLOW_PROJECT_ID")
 
 if not API_KEY or not PROJECT_ID:
