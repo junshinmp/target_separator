@@ -2,6 +2,7 @@ import os
 import cv2
 import glob
 import torch
+import numpy as np
 from pathlib import Path
 from dotenv import load_dotenv
 from roboflow import Roboflow
@@ -13,7 +14,7 @@ DATASET_CONFIG = "data.yaml"
 if __name__ == '__main__':
     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
     if torch.cuda.is_available():
-        device = 0
+        device = "0"
         print(f"GPU being used: {torch.cuda.get_device_name(0)}")
     else: 
         device = "cpu" 
@@ -31,19 +32,18 @@ if __name__ == '__main__':
     rf = Roboflow(api_key=API_KEY)
     project = rf.workspace().project(PROJECT_ID)
     version = project.version(VERSION_NUMBER)
-
-    # download the files temp
     dataset = version.download("yolov8")
 
     # in the newly created test file location, pull tester images
     test_images = glob.glob(f"{dataset.location}/test/images/*.jpg")
+    test_images.sort()
     print(f"Downloaded split. Found {len(test_images)} test images to evaluate.")
 
     yolo = YOLO("yolov8n-p2.yaml").load("yolov8n.pt")
     results = yolo.train(
         data=f"{dataset.location}/{DATASET_CONFIG}",
         device=device,
-        epochs=50,
+        epochs=10,
         imgsz=640, 
         box=12.0,            
         cls=2.5,
@@ -62,10 +62,6 @@ if __name__ == '__main__':
     best_model_path = best_path if best_path.exists() else last_path
 
     print(f"\n🎯 Target Locked! Loading custom weights from: {best_model_path}")
-    trained_yolo = YOLO(str(best_model_path))
-    best_model_path = best_path if best_path.exists() else last_path
-
-    print(f"\nLoading custom weights from: {best_model_path}")
     trained_yolo = YOLO(str(best_model_path))
 
     output_dir = Path("test_results")
