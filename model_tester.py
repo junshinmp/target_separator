@@ -61,7 +61,7 @@ if __name__ == '__main__':
     # Select whichever weight file actually exists in that folder
     best_model_path = best_path if best_path.exists() else last_path
 
-    print(f"\n🎯 Target Locked! Loading custom weights from: {best_model_path}")
+    print(f"\nLoading custom weights from: {best_model_path}")
     trained_yolo = YOLO(str(best_model_path))
 
     output_dir = Path("test_results")
